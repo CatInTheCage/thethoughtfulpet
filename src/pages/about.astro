@@ -1,0 +1,45 @@
+---
+import Page from '../layouts/Page.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+---
+
+<Page
+	title="About Us"
+	description={`Learn why ${SITE_TITLE} exists, how we research our guides, and how we keep recommendations honest.`}
+	image="/images/about.jpg"
+	breadcrumbs={[
+		{ label: 'Home', href: '/' },
+		{ label: 'About Us', href: '/about' },
+	]}
+	showNewsletter={true}
+>
+	<h2>Our Mission</h2>
+	<p>
+		{SITE_TITLE} helps pet owners make smarter feeding decisions. We translate confusing product specs and scattered advice into clear, research-backed guides you can trust.
+	</p>
+
+	<h2>How We Research</h2>
+	<ol>
+		<li><strong>Analyze verified reviews</strong> from Amazon, Chewy, Reddit, and specialist forums to spot real-world patterns.</li>
+		<li><strong>Compare specs and safety standards</strong> such as food-grade materials, capacity, stability, and ease of cleaning.</li>
+		<li><strong>Consult veterinary and behavior sources</strong> to make sure health claims are accurate and responsible.</li>
+		<li><strong>Test hands-on when possible</strong> so we can describe fit, finish, and daily use honestly.</li>
+		<li><strong>Update regularly</strong> as products change, new studies appear, and reader feedback comes in.</li>
+	</ol>
+
+	<h2>Why Trust Us?</h2>
+	<p>
+		We are reader-supported through affiliate links, which means brands do not pay for placement. Our editorial decisions are driven by what is safest and most useful for your pet, not by commissions.
+	</p>
+	<p>
+		Every product guide includes a clear <a href="/affiliate-disclosure/">affiliate disclosure</a>, and we never recommend a product we would not consider for our own pets.
+	</p>
+
+	<h2>Meet the Team</h2>
+	<p>[PLACEHOLDER: Brief team or author introduction. Since the site is run by a small research team, include background, expertise, and why you care about pet feeding safety.]</p>
+
+	<h2>Get in Touch</h2>
+	<p>
+		Have a question, correction, or product suggestion? Email us at <a href="mailto:hello@thethoughtfulpet.com">hello@thethoughtfulpet.com</a> or visit our <a href="/contact/">contact page</a>.
+	</p>
+</Page>

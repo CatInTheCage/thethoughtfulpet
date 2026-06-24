@@ -1,0 +1,103 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+import { SITE_TITLE } from '../consts';
+
+interface Props {
+	title: string;
+	description: string;
+	image?: string;
+	breadcrumbs?: Array<{ label: string; href: string }>;
+	showNewsletter?: boolean;
+}
+
+const { title, description, image = '/images/hero.jpg', breadcrumbs, showNewsletter = true } = Astro.props;
+const pageTitle = `${title} | ${SITE_TITLE}`;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={pageTitle} description={description} image={image} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="page-content section">
+				<div class="container-narrow">
+					{breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
+
+					<div class="page-header">
+						<h1>{title}</h1>
+						{description && <p class="text-muted">{description}</p>}
+					</div>
+
+					<div class="page-body">
+						<slot />
+					</div>
+
+					{showNewsletter && (
+						<div class="page-newsletter">
+							<NewsletterForm
+								title="Get weekly pet feeding tips"
+								description="Subscribe for practical guides, honest reviews, and money-saving finds."
+							/>
+						</div>
+					)}
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.page-content {
+		padding-top: var(--spacing-md);
+	}
+
+	.page-header {
+		margin: var(--spacing-lg) 0 var(--spacing-xl);
+	}
+
+	.page-header h1 {
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.page-body {
+		font-size: 1.05rem;
+		line-height: 1.7;
+	}
+
+	.page-body h2 {
+		margin-top: var(--spacing-2xl);
+		margin-bottom: var(--spacing-md);
+	}
+
+	.page-body h3 {
+		margin-top: var(--spacing-xl);
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.page-body p {
+		margin-bottom: var(--spacing-md);
+	}
+
+	.page-body ul,
+	.page-body ol {
+		margin-bottom: var(--spacing-md);
+		padding-left: var(--spacing-lg);
+	}
+
+	.page-body li {
+		margin-bottom: var(--spacing-xs);
+	}
+
+	.page-newsletter {
+		margin-top: var(--spacing-3xl);
+		padding-top: var(--spacing-2xl);
+		border-top: 1px solid hsl(var(--border));
+	}
+</style>

@@ -1,0 +1,136 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+	currentSlug: string;
+	currentCategory?: string;
+	posts: CollectionEntry<'blog'>[];
+	limit?: number;
+}
+
+const { currentSlug, currentCategory, posts, limit = 3 } = Astro.props;
+
+const relatedPosts = posts
+	.filter((post) => post.id !== currentSlug)
+	.filter((post) => {
+		if (!currentCategory) return true;
+		return post.data.categories?.includes(currentCategory);
+	})
+	.slice(0, limit);
+---
+
+{
+	relatedPosts.length > 0 && (
+		<section class="related-articles">
+			<span class="section-eyebrow">Keep reading</span>
+			<h3>Related Articles</h3>
+			<div class="related-grid">
+				{relatedPosts.map((post) => (
+					<article class="related-card">
+						<a href={`/blog/${post.id}/`} class="related-link">
+							<div class="related-image">
+								<img src={post.data.heroImage} alt={post.data.title} loading="lazy" />
+							</div>
+							<div class="related-content">
+								{post.data.categories && post.data.categories[0] && (
+									<span class="badge badge-secondary">
+										{post.data.categories[0].replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+									</span>
+								)}
+								<h4>{post.data.title}</h4>
+								<p class="text-muted text-small">{post.data.description}</p>
+							</div>
+						</a>
+					</article>
+				))}
+			</div>
+		</section>
+	)
+}
+
+<style>
+	.related-articles {
+		margin-top: var(--spacing-3xl);
+		padding-top: var(--spacing-2xl);
+		border-top: 1px solid hsl(var(--border));
+	}
+
+	.related-articles h3 {
+		margin-bottom: var(--spacing-lg);
+	}
+
+	.related-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+		gap: var(--spacing-lg);
+	}
+
+	.related-card {
+		background-color: hsl(var(--card));
+		border-radius: var(--radius-card);
+		overflow: hidden;
+		border: 1px solid hsl(var(--border));
+		box-shadow: var(--shadow-card);
+		transition: transform 0.25s ease, box-shadow 0.25s ease;
+	}
+
+	.related-card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-card-hover);
+	}
+
+	.related-link {
+		display: block;
+		color: hsl(var(--foreground));
+	}
+
+	.related-link:hover {
+		text-decoration: none;
+	}
+
+	.related-image {
+		overflow: hidden;
+	}
+
+	.related-card img {
+		width: 100%;
+		height: 160px;
+		object-fit: cover;
+		border-radius: 0;
+		transition: transform 0.4s ease;
+	}
+
+	.related-card:hover img {
+		transform: scale(1.03);
+	}
+
+	.related-content {
+		padding: var(--spacing-md);
+	}
+
+	.related-content .badge {
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.related-card h4 {
+		font-family: var(--font-body);
+		font-size: 1rem;
+		font-weight: 600;
+		line-height: 1.35;
+		margin-bottom: var(--spacing-xs);
+	}
+
+	.related-card p {
+		margin: 0;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	@media (max-width: 640px) {
+		.related-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

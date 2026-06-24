@@ -1,0 +1,46 @@
+---
+import Page from '../layouts/Page.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+---
+
+<Page
+	title="Free Dog Feeding Safety Checklist"
+	description="Join thousands of thoughtful pet owners and get our free Dog Feeding Safety Checklist + weekly feeding tips."
+	image="/images/hero.jpg"
+	breadcrumbs={[
+		{ label: 'Home', href: '/' },
+		{ label: 'Free Checklist', href: '/newsletter' },
+	]}
+	showNewsletter={false}
+>
+	<p class="lead">
+		Make every mealtime safer. Our free checklist covers the 15 most important feeding safety checks every dog owner should know.
+	</p>
+
+	<h2>What You'll Get</h2>
+	<ul>
+		<li>A printable Dog Feeding Safety Checklist (PDF)</li>
+		<li>Weekly research-backed feeding tips</li>
+		<li>Honest product reviews and money-saving finds</li>
+		<li>First access to new guides and tools</li>
+	</ul>
+
+	<h2>Enter Your Email</h2>
+	<NewsletterForm
+		title=""
+		description="No spam. Unsubscribe anytime."
+		buttonText="Get My Free Checklist"
+	/>
+
+	<p class="text-small text-muted">
+		By subscribing, you agree to receive emails from The Thoughtful Pet. See our <a href="/privacy-policy/">Privacy Policy</a>.
+	</p>
+</Page>
+
+<style>
+	.lead {
+		font-size: 1.15rem;
+		color: hsl(var(--muted-foreground));
+		margin-bottom: var(--spacing-xl);
+	}
+</style>

@@ -1,0 +1,40 @@
+---
+import { AFFILIATE_DISCLOSURE } from '../consts';
+---
+
+<div class="affiliate-disclosure">
+	<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<circle cx="12" cy="12" r="10" />
+		<line x1="12" y1="16" x2="12" y2="12" />
+		<line x1="12" y1="8" x2="12.01" y2="8" />
+	</svg>
+	<div>
+		<strong>Affiliate Disclosure:</strong> {AFFILIATE_DISCLOSURE} <a href="/affiliate-disclosure/">Learn more</a>.
+	</div>
+</div>
+
+<style>
+	.affiliate-disclosure {
+		display: flex;
+		gap: var(--spacing-sm);
+		align-items: flex-start;
+		padding: var(--spacing-md) var(--spacing-lg);
+		background-color: hsl(var(--primary) / 0.06);
+		border: 1px solid hsl(var(--primary) / 0.12);
+		border-radius: var(--radius-md);
+	}
+
+	.affiliate-disclosure svg {
+		width: 1.1rem;
+		height: 1.1rem;
+		color: hsl(var(--primary));
+		flex-shrink: 0;
+		margin-top: 0.15rem;
+	}
+
+	.affiliate-disclosure div {
+		line-height: 1.6;
+		font-size: 0.875rem;
+		color: hsl(var(--muted-foreground));
+	}
+</style>

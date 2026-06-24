@@ -1,0 +1,254 @@
+---
+import { getCollection } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import FormattedDate from '../../components/FormattedDate.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import { SITE_TITLE } from '../../consts';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	const slugs = ['best-picks', 'pet-knowledge', 'problem-solving', 'care-guides'];
+	return slugs.map((slug) => ({
+		params: { slug },
+		props: { slug, posts },
+	}));
+}
+
+const { slug, posts } = Astro.props;
+
+const categories = [
+	{ slug: 'best-picks', label: 'Best Picks', description: 'Top-rated feeding products, tested and compared.' },
+	{ slug: 'pet-knowledge', label: 'Pet Knowledge', description: 'Understand your pet\'s eating behavior and health needs.' },
+	{ slug: 'problem-solving', label: 'Problem Solving', description: 'Practical answers to common feeding challenges.' },
+	{ slug: 'care-guides', label: 'Care Guides', description: 'Step-by-step routines for healthier mealtime habits.' },
+];
+
+const currentCategory = categories.find((c) => c.slug === slug)!;
+
+const filteredPosts = posts
+	.filter((post) => post.data.categories?.includes(slug))
+	.sort(
+		(a, b) =>
+			(b.data.updatedDate || b.data.pubDate).valueOf() - (a.data.updatedDate || a.data.pubDate).valueOf()
+	);
+
+const pageTitle = `${currentCategory.label} | Blog | ${SITE_TITLE}`;
+const pageDescription = currentCategory.description;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={pageTitle} description={pageDescription} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section class="category-list section">
+				<div class="container">
+					<Breadcrumbs
+						items={[
+							{ label: 'Home', href: '/' },
+							{ label: 'Blog', href: '/blog/' },
+							{ label: currentCategory.label, href: `/categories/${slug}/` },
+						]}
+					/>
+
+					<div class="page-header">
+						<span class="section-eyebrow">Category</span>
+						<h1>{currentCategory.label}</h1>
+						<p class="text-muted">{pageDescription}</p>
+					</div>
+
+					<div class="category-filter">
+						{categories.map((cat) => (
+							<a
+								href={`/categories/${cat.slug}/`}
+								class={`filter-pill ${cat.slug === slug ? 'active' : ''}`}
+							>
+								{cat.label}
+							</a>
+						))}
+					</div>
+
+					{filteredPosts.length > 0 ? (
+						<div class="article-grid">
+							{filteredPosts.map((post) => (
+								<article class="article-card">
+									<a href={`/blog/${post.id}/`} class="article-card-link">
+										<div class="article-image">
+											<img src={post.data.heroImage} alt={post.data.title} loading="lazy" />
+										</div>
+										<div class="article-card-content">
+											{post.data.categories && post.data.categories[0] && (
+												<span class="badge badge-secondary article-category">
+													{post.data.categories[0].replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+												</span>
+											)}
+											<h3>{post.data.title}</h3>
+											<p class="text-muted">{post.data.description}</p>
+											<div class="article-meta">
+												<span class="text-small text-muted">
+													<FormattedDate date={post.data.updatedDate || post.data.pubDate} />
+												</span>
+												<span class="read-more">Read More →</span>
+											</div>
+										</div>
+									</a>
+								</article>
+							))}
+						</div>
+					) : (
+						<p class="text-muted empty-state">
+							No articles in this category yet. Check back soon or browse{' '}
+							<a href="/blog/">all articles</a>.
+						</p>
+					)}
+				</div>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.category-list {
+		padding-top: var(--spacing-md);
+	}
+
+	.page-header {
+		margin: var(--spacing-lg) 0 var(--spacing-xl);
+	}
+
+	.page-header h1 {
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.category-filter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacing-sm);
+		margin-bottom: var(--spacing-xl);
+	}
+
+	.filter-pill {
+		display: inline-block;
+		padding: var(--spacing-xs) var(--spacing-md);
+		background-color: hsl(var(--card));
+		border: 1px solid hsl(var(--border));
+		border-radius: 20px;
+		font-size: 0.9rem;
+		color: hsl(var(--muted-foreground));
+		transition: all 0.2s ease;
+	}
+
+	.filter-pill:hover,
+	.filter-pill.active {
+		background-color: hsl(var(--primary));
+		color: hsl(var(--primary-foreground));
+		border-color: hsl(var(--primary));
+		text-decoration: none;
+	}
+
+	.article-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: var(--spacing-xl);
+	}
+
+	.article-card {
+		background-color: hsl(var(--card));
+		border-radius: var(--radius-card);
+		overflow: hidden;
+		box-shadow: var(--shadow-card);
+		transition: transform 0.25s ease, box-shadow 0.25s ease;
+		border: 1px solid hsl(var(--border));
+	}
+
+	.article-card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--shadow-card-hover);
+	}
+
+	.article-card-link {
+		color: hsl(var(--foreground));
+		display: block;
+	}
+
+	.article-card-link:hover {
+		text-decoration: none;
+	}
+
+	.article-image {
+		overflow: hidden;
+	}
+
+	.article-card img {
+		width: 100%;
+		height: 220px;
+		object-fit: cover;
+		border-radius: 0;
+		transition: transform 0.4s ease;
+	}
+
+	.article-card:hover img {
+		transform: scale(1.03);
+	}
+
+	.article-card-content {
+		padding: var(--spacing-lg);
+	}
+
+	.article-category {
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.article-card h3 {
+		font-family: var(--font-body);
+		font-size: 1.15rem;
+		font-weight: 600;
+		line-height: 1.4;
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.article-card p {
+		font-size: 0.95rem;
+		margin-bottom: var(--spacing-md);
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.article-meta {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: var(--spacing-sm);
+	}
+
+	.read-more {
+		color: hsl(var(--primary));
+		font-weight: 600;
+		font-size: 0.9rem;
+		white-space: nowrap;
+	}
+
+	.empty-state {
+		text-align: center;
+		padding: var(--spacing-3xl) 0;
+	}
+
+	@media (max-width: 1024px) {
+		.article-grid {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+
+	@media (max-width: 640px) {
+		.article-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

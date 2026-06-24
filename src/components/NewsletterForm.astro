@@ -1,0 +1,85 @@
+---
+interface Props {
+	title?: string;
+	description?: string;
+	buttonText?: string;
+	compact?: boolean;
+}
+
+const {
+	title = "Get weekly pet feeding tips",
+	description = "Join thousands of thoughtful pet owners. No spam, unsubscribe anytime.",
+	buttonText = "Subscribe",
+	compact = false,
+} = Astro.props;
+---
+
+<div class={`newsletter-box ${compact ? 'compact' : ''}`}>
+	<div class="newsletter-content">
+		{title && <h3>{title}</h3>}
+		<p class="text-muted">{description}</p>
+		<form
+			class="newsletter-form"
+			action="PLACEHOLDER_CONVERTKIT_ACTION_URL"
+			method="POST"
+			target="_blank"
+			novalidate
+		>
+			<label for="email" class="sr-only">Email address</label>
+			<input
+				type="email"
+				id="email"
+				name="email"
+				placeholder="Enter your email"
+				required
+			/>
+			<button type="submit" class="btn btn-primary">{buttonText}</button>
+		</form>
+	</div>
+</div>
+
+<style>
+	.newsletter-box {
+		background: linear-gradient(135deg, hsl(var(--primary) / 0.06) 0%, hsl(var(--secondary) / 0.06) 100%);
+		border: 1px solid hsl(var(--border));
+		border-radius: var(--radius-card);
+		padding: var(--spacing-2xl);
+	}
+
+	.newsletter-box.compact {
+		padding: 0;
+		background: transparent;
+		border: none;
+	}
+
+	.newsletter-content h3 {
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.newsletter-content p {
+		margin-bottom: var(--spacing-md);
+		font-size: 0.95rem;
+	}
+
+	.newsletter-form {
+		display: flex;
+		gap: var(--spacing-sm);
+		flex-wrap: wrap;
+	}
+
+	.newsletter-form input {
+		flex: 1;
+		min-width: 240px;
+	}
+
+	@media (max-width: 768px) {
+		.newsletter-form {
+			flex-direction: column;
+		}
+
+		.newsletter-form input,
+		.newsletter-form button {
+			width: 100%;
+		}
+	}
+</style>

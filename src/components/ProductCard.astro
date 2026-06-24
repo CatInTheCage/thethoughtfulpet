@@ -1,0 +1,196 @@
+---
+interface Props {
+	product: {
+		name: string;
+		rating: string;
+		reviews: string;
+		image: string;
+		bestFor: string;
+		material: string;
+		capacity: string;
+		price: string;
+		pros: string[];
+		cons: string[];
+		amazonId: string;
+	};
+	badge?: string;
+}
+
+const { product, badge } = Astro.props;
+---
+
+<article class="product-card">
+	<div class="product-image">
+		<img src={product.image} alt={product.name} loading="lazy" />
+		{badge && <span class="badge badge-primary product-badge">{badge}</span>}
+	</div>
+	<div class="product-info">
+		<h3>{product.name}</h3>
+		<div class="product-meta">
+			<span class="rating"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> {product.rating}</span>
+			<span class="reviews">({product.reviews} reviews)</span>
+			<span class="price">{product.price}</span>
+		</div>
+		<div class="product-specs">
+			<p><strong>Best For:</strong> {product.bestFor}</p>
+			<p><strong>Material:</strong> {product.material}</p>
+			<p><strong>Capacity:</strong> {product.capacity}</p>
+		</div>
+		<div class="pros-cons">
+			<div class="pros">
+				<h4>What We Like</h4>
+				<ul>
+					{product.pros.map((pro) => <li>{pro}</li>)}
+				</ul>
+			</div>
+			<div class="cons">
+				<h4>What We Don't Like</h4>
+				<ul>
+					{product.cons.map((con) => <li>{con}</li>)}
+				</ul>
+			</div>
+		</div>
+		<a
+			href={`https://www.amazon.com/dp/${product.amazonId}/?tag=PLACEHOLDER_AMAZON_TAG-20`}
+			class="btn btn-primary product-cta"
+			target="_blank"
+			rel="noopener"
+		>
+			Check Price on Amazon
+		</a>
+	</div>
+</article>
+
+<style>
+	.product-card {
+		background-color: hsl(var(--card));
+		border-radius: var(--radius-card);
+		overflow: hidden;
+		box-shadow: var(--shadow-card);
+		margin: var(--spacing-xl) 0;
+		border: 1px solid hsl(var(--border));
+		transition: transform 0.25s ease, box-shadow 0.25s ease;
+	}
+
+	.product-card:hover {
+		transform: translateY(-2px);
+		box-shadow: var(--shadow-card-hover);
+	}
+
+	.product-image {
+		position: relative;
+		background-color: hsl(var(--background));
+		padding: var(--spacing-xl);
+		text-align: center;
+	}
+
+	.product-image img {
+		max-height: 240px;
+		width: auto;
+		object-fit: contain;
+		border-radius: var(--radius-md);
+	}
+
+	.product-badge {
+		position: absolute;
+		top: var(--spacing-md);
+		left: var(--spacing-md);
+	}
+
+	.product-info {
+		padding: var(--spacing-xl);
+	}
+
+	.product-info h3 {
+		margin-bottom: var(--spacing-sm);
+		font-size: 1.25rem;
+	}
+
+	.product-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacing-sm) var(--spacing-md);
+		margin-bottom: var(--spacing-md);
+		font-size: 0.95rem;
+	}
+
+	.rating {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.25rem;
+		font-weight: 600;
+		color: hsl(38 92% 50%);
+	}
+
+	.rating svg {
+		width: 1rem;
+		height: 1rem;
+	}
+
+	.reviews {
+		color: hsl(var(--muted-foreground));
+	}
+
+	.price {
+		color: hsl(var(--primary));
+		font-weight: 700;
+	}
+
+	.product-specs {
+		background-color: hsl(var(--background));
+		padding: var(--spacing-md);
+		border-radius: var(--radius-md);
+		margin-bottom: var(--spacing-md);
+	}
+
+	.product-specs p {
+		margin: 0 0 var(--spacing-xs) 0;
+		font-size: 0.95rem;
+	}
+
+	.product-specs p:last-child {
+		margin-bottom: 0;
+	}
+
+	.pros-cons {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: var(--spacing-lg);
+		margin-bottom: var(--spacing-lg);
+	}
+
+	.pros-cons h4 {
+		font-family: var(--font-body);
+		font-size: 0.9rem;
+		font-weight: 600;
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.pros h4 {
+		color: hsl(var(--secondary-dark));
+	}
+
+	.cons h4 {
+		color: hsl(var(--primary-dark));
+	}
+
+	.pros-cons ul {
+		margin: 0;
+		padding-left: var(--spacing-md);
+	}
+
+	.pros-cons li {
+		font-size: 0.9rem;
+		margin-bottom: var(--spacing-xs);
+	}
+
+	.product-cta {
+		width: 100%;
+	}
+
+	@media (max-width: 640px) {
+		.pros-cons {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

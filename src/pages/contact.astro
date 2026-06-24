@@ -1,0 +1,79 @@
+---
+import Page from '../layouts/Page.astro';
+---
+
+<Page
+	title="Contact Us"
+	description="Have a question, suggestion, or correction? We read every message and usually reply within 2 business days."
+	image="/images/cat-eating.jpg"
+	breadcrumbs={[
+		{ label: 'Home', href: '/' },
+		{ label: 'Contact', href: '/contact' },
+	]}
+	showNewsletter={false}
+>
+	<p>
+		We love hearing from thoughtful pet owners. Whether you have a product suggestion, a correction, or just want to say hello, the best way to reach us is by email.
+	</p>
+
+	<h2>Email</h2>
+	<p>
+		<a href="mailto:hello@thethoughtfulpet.com">hello@thethoughtfulpet.com</a>
+	</p>
+
+	<h2>Send a Message</h2>
+	<form
+		class="contact-form"
+		action="PLACEHOLDER_CONTACT_FORM_ACTION"
+		method="POST"
+	>
+		<label for="name">Name</label>
+		<input type="text" id="name" name="name" required />
+
+		<label for="email">Email</label>
+		<input type="email" id="email" name="email" required />
+
+		<label for="subject">Subject</label>
+		<input type="text" id="subject" name="subject" required />
+
+		<label for="message">Message</label>
+		<textarea id="message" name="message" rows="6" required></textarea>
+
+		<button type="submit" class="btn btn-primary">Send Message</button>
+	</form>
+
+	<p class="text-small text-muted">
+		This form is currently a placeholder. Messages will not be delivered until a backend form handler (such as Formspree, Netlify Forms, or ConvertKit) is connected.
+	</p>
+</Page>
+
+<style>
+	.contact-form {
+		display: grid;
+		gap: var(--spacing-md);
+		margin: var(--spacing-xl) 0;
+	}
+
+	.contact-form label {
+		font-weight: 600;
+		font-size: 0.95rem;
+	}
+
+	.contact-form input,
+	.contact-form textarea {
+		padding: var(--spacing-sm) var(--spacing-md);
+		border: 1px solid hsl(var(--border));
+		border-radius: var(--radius-md);
+		background-color: hsl(var(--card));
+		font-family: inherit;
+		font-size: 1rem;
+	}
+
+	.contact-form textarea {
+		resize: vertical;
+	}
+
+	.contact-form button {
+		justify-self: start;
+	}
+</style>

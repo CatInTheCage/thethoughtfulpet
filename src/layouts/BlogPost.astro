@@ -1,0 +1,209 @@
+---
+import { render, type CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import AffiliateDisclosure from '../components/AffiliateDisclosure.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import RelatedArticles from '../components/RelatedArticles.astro';
+import NewsletterForm from '../components/NewsletterForm.astro';
+import FormattedDate from '../components/FormattedDate.astro';
+
+interface Props {
+	post: CollectionEntry<'blog'>;
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { post, posts } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, categories, author, readingTime } = post.data;
+const { Content } = await render(post);
+
+const postSlug = post.id.replace(/\\.mdx?$/, '').replace(/\\\\/g, '/');
+
+const breadcrumbs = [
+	{ label: 'Home', href: '/' },
+	{ label: 'Blog', href: '/blog/' },
+	{ label: title, href: `/blog/${postSlug}/` },
+];
+
+const primaryCategory = categories?.[0] || 'pet-knowledge';
+---
+
+<html lang="en">
+	<head>
+		<BaseHead
+			title={title}
+			description={description}
+			image={heroImage}
+			article={true}
+			pubDate={pubDate}
+			updatedDate={updatedDate}
+			author={author}
+		/>
+	</head>
+
+	<body>
+		<Header />
+		<main>
+			<article class="blog-post">
+				<div class="container-narrow">
+					<Breadcrumbs items={breadcrumbs} />
+
+					<header class="post-header">
+						{
+							categories && categories.length > 0 && (
+								<div class="post-categories">
+									{categories.map((cat) => (
+										<a href={`/categories/${cat}/`} class="badge badge-secondary category-tag">
+											{cat.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
+										</a>
+									))}
+								</div>
+							)
+						}
+						<h1>{title}</h1>
+						<div class="post-meta">
+							<span>By {author}</span>
+							<span class="separator">•</span>
+							<span>Updated <FormattedDate date={updatedDate || pubDate} /></span>
+							{readingTime && (
+								<>
+									<span class="separator">•</span>
+									<span>{readingTime} min read</span>
+								</>
+							)}
+						</div>
+						<AffiliateDisclosure />
+					</header>
+
+					{heroImage && (
+						<div class="post-hero-image">
+							<img src={heroImage} alt={title} />
+						</div>
+					)}
+
+					<div class="post-content">
+						<Content />
+					</div>
+
+					<div class="post-footer">
+						<div class="post-cta">
+							<h3>Enjoyed this guide?</h3>
+							<p class="text-muted">
+								Have a question we didn't answer? Reach out at{' '}
+								<a href="mailto:hello@thethoughtfulpet.com">hello@thethoughtfulpet.com</a>.
+							</p>
+						</div>
+
+						<NewsletterForm
+							title="Get more pet feeding tips"
+							description="Subscribe for weekly guides, product reviews, and money-saving finds."
+						/>
+
+						<RelatedArticles
+							currentSlug={postSlug}
+							currentCategory={primaryCategory}
+							posts={posts}
+						/>
+					</div>
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.blog-post {
+		padding: var(--spacing-md) 0 var(--spacing-3xl);
+	}
+
+	.post-header {
+		margin-bottom: var(--spacing-xl);
+	}
+
+	.post-categories {
+		display: flex;
+		gap: var(--spacing-sm);
+		margin-bottom: var(--spacing-md);
+		flex-wrap: wrap;
+	}
+
+	.category-tag {
+		text-decoration: none;
+	}
+
+	.category-tag:hover {
+		text-decoration: none;
+		background-color: hsl(var(--secondary) / 0.2);
+	}
+
+	.post-header h1 {
+		margin-bottom: var(--spacing-md);
+		font-size: clamp(2.25rem, 5vw, 3.25rem);
+		line-height: 1.1;
+		letter-spacing: -0.02em;
+	}
+
+	.post-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--spacing-sm) var(--spacing-md);
+		color: hsl(var(--muted-foreground));
+		font-size: 0.95rem;
+		margin-bottom: var(--spacing-md);
+	}
+
+	.separator {
+		color: hsl(var(--border));
+	}
+
+	.post-hero-image {
+		margin: var(--spacing-xl) 0;
+		border-radius: var(--radius-card);
+		overflow: hidden;
+		box-shadow: var(--shadow-card);
+	}
+
+	.post-hero-image img {
+		width: 100%;
+		max-height: 450px;
+		object-fit: cover;
+		border-radius: 0;
+	}
+
+	.post-content {
+		font-size: 1.05rem;
+	}
+
+	.post-content h2 {
+		margin-top: var(--spacing-2xl);
+		padding-bottom: var(--spacing-sm);
+		border-bottom: 1px solid hsl(var(--border));
+	}
+
+	.post-content h3 {
+		margin-top: var(--spacing-xl);
+	}
+
+	.post-footer {
+		margin-top: var(--spacing-3xl);
+	}
+
+	.post-cta {
+		text-align: center;
+		margin-bottom: var(--spacing-2xl);
+		padding: var(--spacing-xl);
+		background-color: hsl(var(--muted));
+		border-radius: var(--radius-card);
+	}
+
+	.post-cta h3 {
+		margin-bottom: var(--spacing-sm);
+	}
+
+	.post-cta p {
+		margin: 0 auto;
+		max-width: 50ch;
+	}
+</style>
